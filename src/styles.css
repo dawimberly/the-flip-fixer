@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --color-bg: #f4f1ec;
+  --color-background: #f4f1ec;
+  --color-fg: #12343b;
+  --color-foreground: #12343b;
+  --color-surface: #fbf8f3;
+  --color-card: #fffdf9;
+  --color-muted: #5b6e73;
+  --color-fg-subtle: #7b8b8f;
+  --color-primary: #c45c26;
+  --color-primary-foreground: #fff7f0;
+  --color-ink: #12343b;
+  --color-ink-foreground: #f4f1ec;
+  --color-border: #d5dddf;
+  --color-ring: #c45c26;
+  --color-accent: #c45c26;
+  --color-accent-foreground: #fff7f0;
+  --color-wash: #e8efef;
+  --color-paper-alt: #efe8df;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius: 12px;
+
+  --shadow-border: 0 0 0 1px rgba(18, 52, 59, 0.08), 0 1px 2px -1px rgba(18, 52, 59, 0.06),
+    0 2px 4px 0 rgba(18, 52, 59, 0.04);
+  --shadow-border-hover: 0 0 0 1px rgba(18, 52, 59, 0.12), 0 1px 2px -1px rgba(18, 52, 59, 0.08),
+    0 2px 6px 0 rgba(18, 52, 59, 0.06);
+
+  --motion-quick: 150ms;
+  --motion-fast: 250ms;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background:
+      radial-gradient(1200px 500px at 10% -10%, color-mix(in oklab, var(--color-primary) 8%, transparent), transparent 55%),
+      radial-gradient(900px 400px at 110% 0%, color-mix(in oklab, var(--color-ink) 6%, transparent), transparent 50%),
+      var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    font-family: var(--font-display);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

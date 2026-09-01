@@ -1,0 +1,26 @@
+node_modules/
+dist/
+.output/
+.vinxi/
+.nitro/
+.tanstack/
+.vercel/
+.cache/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Local / builder artifacts
+.grok/
+.project_id
+.node_modules.lock
+screenshots/
+artifacts/
+attachments/
+AGENTS.md
+AGENTS.project.md
+playwright-report/
+test-results/
+coverage/
