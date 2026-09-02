@@ -617,6 +617,15 @@ export function EstimatorApp() {
             <div className="flex shrink-0 items-center gap-1 sm:hidden">
               <EstimateLogButton icon />
               <SaveEstimateButton tone="light" icon />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={startOver}
+                aria-label="Start over"
+              >
+                <RotateCcw className="size-4" />
+              </Button>
             </div>
           </div>
         </header>
