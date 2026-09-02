@@ -29,21 +29,18 @@ import {
   PRICE_AS_OF,
   catalog,
   categoryDisplayName,
-  canInferQuantity,
   estimateJob,
-  inferredQuantity,
-  lookupOption,
   parseScan,
   roomTypes,
   visibleCategoriesFor,
   type JobEstimate,
-  type JobRoom,
   type Opening,
 } from "@/lib/estimator";
 import { downloadEstimatePdf, type EstimatePdfKind } from "@/lib/estimate-pdf";
 import { useActiveRoom, useEstimatorStore } from "@/lib/estimator-store";
 import { CabinetPicker } from "@/components/cabinet-picker";
 import { EstimateLogButton, SaveEstimateButton } from "@/components/estimate-log";
+import { FinishCard } from "@/components/finish-card";
 import { isCabinetCategory } from "@/lib/cabinets";
 import { cn, money, qtyLabel } from "@/lib/utils";
 
@@ -204,86 +201,6 @@ function OpeningList({
         </ul>
       )}
       <p className="text-xs text-muted">Width × height, feet. Openings come off wall area.</p>
-    </div>
-  );
-}
-
-function FinishCard({ category, room }: { category: string; room: JobRoom }) {
-  const setSelection = useEstimatorStore((s) => s.setSelection);
-  const clearSelection = useEstimatorStore((s) => s.clearSelection);
-  const selection = room.selections[category];
-  const block = catalog[category];
-  const scan = parseScan(room);
-  const chosen = selection?.name ? lookupOption(category, selection.name) : null;
-  const infer = chosen ? canInferQuantity(category, chosen.unit) : false;
-  const autoQty = chosen ? inferredQuantity(scan, category, chosen.unit) : null;
-  const qty = selection?.quantity ?? autoQty;
-
-  if (!block) return null;
-
-  return (
-    <div className="min-w-0 rounded-lg bg-surface p-3 sm:p-4">
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-medium text-fg">{block.display_name}</p>
-          {chosen ? (
-            <p className="text-xs text-muted">
-              {money(chosen.cost_per_unit)} / {chosen.unit}
-            </p>
-          ) : (
-            <p className="text-xs text-muted">Leave blank to skip</p>
-          )}
-        </div>
-        {selection?.name ? (
-          <Button type="button" variant="ghost" size="sm" onClick={() => clearSelection(category)}>
-            Clear
-          </Button>
-        ) : null}
-      </div>
-      <Select
-        value={selection?.name || "none"}
-        onValueChange={(value) => {
-          if (value === "none") {
-            clearSelection(category);
-            return;
-          }
-          const option = lookupOption(category, value);
-          const needsQty = option ? !canInferQuantity(category, option.unit) : true;
-          setSelection(category, {
-            name: value,
-            quantity: needsQty ? (selection?.quantity ?? 1) : null,
-          });
-        }}
-      >
-        <SelectTrigger aria-label={block.display_name}>
-          <SelectValue placeholder="Choose a finish" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="none">Not in this estimate</SelectItem>
-          {block.options.map((option) => (
-            <SelectItem key={option.name} value={option.name}>
-              {option.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      {chosen ? (
-        <div className="mt-3">
-          {infer && autoQty != null && selection?.quantity == null ? (
-            <p className="rounded-md bg-wash px-3 py-2 text-sm text-fg">
-              From the room · <span className="font-mono tabular-nums">{qtyLabel(autoQty, chosen.unit)}</span>
-            </p>
-          ) : (
-            <NumberField
-              label="Quantity"
-              value={qty ?? 0}
-              step={chosen.unit === "each" ? 1 : 1}
-              onChange={(value) => setSelection(category, { quantity: value })}
-              suffix={chosen.unit}
-            />
-          )}
-        </div>
-      ) : null}
     </div>
   );
 }
