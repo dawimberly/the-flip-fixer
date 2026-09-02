@@ -53,6 +53,8 @@ export type ClientInfo = {
 
 export type SelectionValue = { name: string; quantity: number | null };
 
+export type CategorySelections = SelectionValue | SelectionValue[];
+
 export type Selection = {
   category: string;
   name: string;
@@ -100,7 +102,7 @@ export type JobRoom = {
   doors: Opening[];
   windows: Opening[];
   extraCategories: string[];
-  selections: Record<string, SelectionValue>;
+  selections: Record<string, CategorySelections>;
   cabinetFinishId: string;
   cabinets: CabinetPick[];
 };
@@ -205,15 +207,22 @@ export function visibleCategoriesFor(room: JobRoom) {
   return [...new Set(ids)].filter((id) => catalog[id]);
 }
 
+function listSelections(value: CategorySelections | undefined): SelectionValue[] {
+  if (!value) return [];
+  const list = Array.isArray(value) ? value : [value];
+  return list.filter((item) => Boolean(item?.name?.trim()));
+}
+
 export function selectionsFromRoom(room: JobRoom): Selection[] {
   return visibleCategoriesFor(room)
     .filter((category) => !isCabinetCategory(category))
-    .map((category) => {
-      const value = room.selections[category];
-      if (!value?.name) return null;
-      return { category, name: value.name, quantity: value.quantity };
-    })
-    .filter((item): item is Selection => item != null);
+    .flatMap((category) =>
+      listSelections(room.selections[category]).map((item) => ({
+        category,
+        name: item.name,
+        quantity: item.quantity,
+      })),
+    );
 }
 
 export function buildEstimate(
@@ -230,7 +239,7 @@ export function buildEstimate(
     if (isCabinetCategory(selection.category)) continue;
     const item = lookupOption(selection.category, selection.name);
     if (!item) {
-      warnings.push(`No catalog option named “${selection.name}” in ${selection.category}.`);
+      warnings.push(`No catalog option named \u201c${selection.name}\u201d in ${selection.category}.`);
       continue;
     }
 
@@ -345,7 +354,12 @@ export function cloneRoom(room: JobRoom, existing: JobRoom[]): JobRoom {
     doors: room.doors.map((item) => ({ ...item, id: newId() })),
     windows: room.windows.map((item) => ({ ...item, id: newId() })),
     extraCategories: [...room.extraCategories],
-    selections: { ...room.selections },
+    selections: Object.fromEntries(
+      Object.entries(room.selections).map(([key, value]) => [
+        key,
+        Array.isArray(value) ? value.map((item) => ({ ...item })) : { ...value },
+      ]),
+    ),
     cabinets: (room.cabinets ?? []).map((item) => ({ ...item, id: newId() })),
   };
 }
@@ -383,10 +397,13 @@ export function sampleKitchenRoom(): JobRoom {
     windows: [{ id: "sample-window-1", widthFt: 4, heightFt: 3 }],
     extraCategories: [],
     selections: {
-      flooring: { name: "Luxury vinyl plank — installed", quantity: null },
+      flooring: { name: "Luxury vinyl plank \u2014 installed", quantity: null },
       "walls/paint": { name: "Prime (1 coat) then paint (2 coats) drywall", quantity: null },
-      countertops: { name: "Quartz countertop — installed", quantity: 32 },
-      "trim/baseboards": { name: "Baseboard — 3 1/4 in", quantity: null },
+      countertops: { name: "Quartz countertop \u2014 installed", quantity: 32 },
+      "trim/baseboards": [
+        { name: "Baseboard \u2014 3 1/4 in", quantity: null },
+        { name: "Seal (1 coat) & paint (2 coats) baseboard", quantity: null },
+      ],
       lighting: { name: "Recessed light fixture", quantity: 4 },
     },
     cabinetFinishId: "gs",
@@ -414,12 +431,12 @@ export function sampleBathroomRoom(): JobRoom {
     windows: [{ id: "sample-bath-window", widthFt: 2, heightFt: 3 }],
     extraCategories: [],
     selections: {
-      flooring: { name: "Tile floor covering — 2x2", quantity: null },
+      flooring: { name: "Tile floor covering \u2014 2x2", quantity: null },
       "walls/paint": { name: "Prime (1 coat) then paint (2 coats) drywall", quantity: null },
       plumbing: { name: "Toilet", quantity: 1 },
-      "tile/shower surround": { name: "Shower faucet — standard grade", quantity: 1 },
-      lighting: { name: "Vanity light strip — stainless", quantity: 1 },
-      "trim/baseboards": { name: "Baseboard — 3 1/4 in", quantity: null },
+      "tile/shower surround": { name: "Shower faucet \u2014 standard grade", quantity: 1 },
+      lighting: { name: "Vanity light strip \u2014 stainless", quantity: 1 },
+      "trim/baseboards": { name: "Baseboard \u2014 3 1/4 in", quantity: null },
     },
     cabinetFinishId: "gs",
     cabinets: [{ id: "cab-va36", sku: "VA362134", quantity: 1 }],
