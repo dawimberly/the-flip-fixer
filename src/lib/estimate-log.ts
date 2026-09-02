@@ -1,9 +1,5 @@
-import {
-  estimateJob,
-  sampleJob,
-  type ClientInfo,
-  type JobRoom,
-} from "@/lib/estimator";
+import { estimateJob, sampleJob, type ClientInfo, type JobRoom } from "@/lib/estimator";
+import { effectiveOpPercent } from "@/lib/op";
 import { normalizeRooms } from "@/lib/selections";
 
 const LOG_KEY = "flipfixer.estimate-log.v1";
@@ -12,6 +8,8 @@ const DRAFT_KEY = "flipfixer.estimate-draft.v1";
 export type EstimateSnapshot = {
   rooms: JobRoom[];
   laborRate: number;
+  opEnabled?: boolean;
+  lastOpPercent?: number;
   client: ClientInfo;
 };
 
@@ -59,7 +57,8 @@ function writeJson(key: string, value: unknown) {
 }
 
 export function summarizeSnapshot(snapshot: EstimateSnapshot) {
-  const job = estimateJob(snapshot.rooms, snapshot.laborRate);
+  const op = effectiveOpPercent(snapshot.laborRate, snapshot.opEnabled ?? true);
+  const job = estimateJob(snapshot.rooms, op);
   const customer = snapshot.client.name.trim();
   const property = snapshot.client.propertyName.trim();
   const address = snapshot.client.propertyAddress.trim() || snapshot.client.address.trim();
@@ -83,6 +82,8 @@ function normalizeSnapshot(snapshot: EstimateSnapshot): EstimateSnapshot {
   return {
     rooms: normalizeRooms(snapshot.rooms),
     laborRate: snapshot.laborRate,
+    opEnabled: snapshot.opEnabled ?? true,
+    lastOpPercent: snapshot.lastOpPercent ?? snapshot.laborRate,
     client: snapshot.client,
   };
 }
@@ -105,6 +106,8 @@ export function loadDraft(): EstimateDraft | null {
   return {
     ...draft,
     rooms: normalizeRooms(draft.rooms),
+    opEnabled: draft.opEnabled ?? true,
+    lastOpPercent: draft.lastOpPercent ?? draft.laborRate,
   };
 }
 
@@ -163,6 +166,8 @@ export function seedSampleEstimateIfEmpty() {
   upsertSavedEstimate({
     rooms: sample.rooms,
     laborRate: sample.laborRate,
+    opEnabled: true,
+    lastOpPercent: sample.laborRate,
     client: sample.client,
   });
   return loadEstimateLog();
