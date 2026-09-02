@@ -22,6 +22,7 @@ import {
   type Opening,
   type SelectionValue,
 } from "@/lib/estimator";
+import { defaultFinishId } from "@/lib/cabinets";
 
 type JobSlice = {
   rooms: JobRoom[];
@@ -106,6 +107,7 @@ export const useEstimatorStore = create<EstimatorState>((set, get) => ({
   addRoom: (roomTypeId) =>
     set((state) => {
       const room = createBlankRoom(roomTypeId, state.rooms);
+      room.cabinetFinishId = defaultFinishId(roomTypeId);
       return { rooms: [...state.rooms, room], activeRoomId: room.id };
     }),
   duplicateRoom: (id) =>
@@ -139,9 +141,11 @@ export const useEstimatorStore = create<EstimatorState>((set, get) => ({
       const others = state.rooms.filter((room) => room.id !== active.id);
       const shouldRename =
         active.label === previousType.display_name || active.label.startsWith(`${previousType.display_name} `);
+      const hasCabinets = (active.cabinets ?? []).length > 0;
       return patchActive(state, {
         roomTypeId: nextType.room_id,
         label: shouldRename ? uniqueRoomLabel(nextType.display_name, others) : active.label,
+        cabinetFinishId: hasCabinets ? active.cabinetFinishId : defaultFinishId(nextType.room_id),
       });
     }),
   setDimension: (key, value) =>
