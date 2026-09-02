@@ -28,6 +28,19 @@
     ]
   },
   {
+    "room_id": "closet",
+    "display_name": "Closet",
+    "typical_categories": [
+      "flooring",
+      "drywall",
+      "walls/paint",
+      "closet/storage",
+      "lighting",
+      "trim/baseboards",
+      "doors"
+    ]
+  },
+  {
     "room_id": "bedroom",
     "display_name": "Bedroom",
     "typical_categories": [
