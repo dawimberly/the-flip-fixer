@@ -100,6 +100,15 @@ function writeEstimateLog(list: SavedEstimate[]) {
   writeJson(LOG_KEY, list);
 }
 
+export function replaceEstimateLog(list: SavedEstimate[]) {
+  writeEstimateLog(
+    list
+      .filter(isSavedEstimate)
+      .map((item) => ({ ...item, snapshot: normalizeSnapshot(item.snapshot) }))
+      .sort((a, b) => b.savedAt.localeCompare(a.savedAt)),
+  );
+}
+
 export function loadDraft(): EstimateDraft | null {
   const draft = readJson<EstimateDraft>(DRAFT_KEY);
   if (!draft?.rooms?.length || !draft.client) return null;
