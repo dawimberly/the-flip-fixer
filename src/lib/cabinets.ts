@@ -1,5 +1,6 @@
 import legacyJson from "@/data/northville.json";
-import framelessJson from "@/data/northville-frameless.json";
+import framelessCabinetsJson from "@/data/northville-frameless-cabinets.json";
+import framelessClosetsJson from "@/data/northville-frameless-closets.json";
 import type { LineItem } from "@/lib/estimator";
 
 export type CabinetFinish = {
@@ -90,8 +91,8 @@ function mergeCatalogs(legacy: NorthvilleCatalog, next: NorthvilleCatalog): Nort
 }
 
 export const northville = mergeCatalogs(
-  legacyJson as NorthvilleCatalog,
-  framelessJson as NorthvilleCatalog,
+  mergeCatalogs(legacyJson as NorthvilleCatalog, framelessCabinetsJson as NorthvilleCatalog),
+  framelessClosetsJson as NorthvilleCatalog,
 );
 export const CABINET_LABOR = northville.laborPerUnit;
 export const CABINET_LABOR_OVERSIZED = northville.laborPerOversized;
