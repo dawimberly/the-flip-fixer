@@ -13,16 +13,30 @@ import { formatSavedAt, searchEstimateLog } from "@/lib/estimate-log";
 import { useEstimatorStore } from "@/lib/estimator-store";
 import { money } from "@/lib/utils";
 
-export function EstimateLogButton({ compact = false }: { compact?: boolean }) {
+export function EstimateLogButton({
+  compact = false,
+  icon = false,
+}: {
+  compact?: boolean;
+  icon?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const count = useEstimatorStore((s) => s.log.length);
 
   return (
     <>
-      <Button type="button" variant={compact ? "outline" : "ghost"} size="sm" onClick={() => setOpen(true)}>
+      <Button
+        type="button"
+        variant={icon || compact ? "outline" : "ghost"}
+        size={icon ? "icon" : "sm"}
+        onClick={() => setOpen(true)}
+        aria-label="Estimate log"
+        className={icon ? "relative" : undefined}
+      >
         <NotebookTabs className="size-4" />
-        {compact ? "Log" : "Estimate log"}
-        {count > 0 ? <span className="font-mono text-xs tabular-nums">{count}</span> : null}
+        {icon ? null : compact ? "Log" : "Estimate log"}
+        {icon && count > 0 ? <span className="absolute top-1 right-1 size-1.5 rounded-full bg-primary" /> : null}
+        {!icon && count > 0 ? <span className="font-mono text-xs tabular-nums">{count}</span> : null}
       </Button>
       <EstimateLogDialog open={open} onOpenChange={setOpen} />
     </>
@@ -31,9 +45,11 @@ export function EstimateLogButton({ compact = false }: { compact?: boolean }) {
 
 export function SaveEstimateButton({
   compact = false,
+  icon = false,
   tone = "rail",
 }: {
   compact?: boolean;
+  icon?: boolean;
   tone?: "rail" | "light";
 }) {
   const currentSavedId = useEstimatorStore((s) => s.currentSavedId);
@@ -50,9 +66,15 @@ export function SaveEstimateButton({
 
   if (tone === "light") {
     return (
-      <Button type="button" variant="outline" size="sm" onClick={() => save(false)}>
+      <Button
+        type="button"
+        variant="outline"
+        size={icon ? "icon" : "sm"}
+        onClick={() => save(false)}
+        aria-label="Save to log"
+      >
         <Bookmark className="size-4" />
-        {currentSavedId ? "Update log" : "Save"}
+        {icon ? null : currentSavedId ? "Update log" : "Save"}
       </Button>
     );
   }

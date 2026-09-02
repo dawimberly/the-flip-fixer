@@ -57,7 +57,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl bg-card p-4 shadow-border sm:p-6">
+    <section className="min-w-0 max-w-full rounded-xl bg-card p-4 shadow-border sm:p-6">
       <p className="text-[11px] font-medium tracking-[0.18em] text-muted uppercase">{kicker}</p>
       <h2 className="mt-1 font-display text-xl font-medium tracking-tight text-fg sm:text-2xl">{title}</h2>
       <div className="mt-5">{children}</div>
@@ -81,9 +81,9 @@ function NumberField({
   suffix?: string;
 }) {
   return (
-    <div className="space-y-1.5">
+    <div className="min-w-0 space-y-1.5">
       <Label>{label}</Label>
-      <div className="flex items-center gap-2">
+      <div className="flex min-w-0 items-center gap-2">
         <button
           type="button"
           className="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-card text-fg shadow-border transition-transform duration-150 ease-out active:scale-[0.96]"
@@ -96,7 +96,7 @@ function NumberField({
           inputMode="decimal"
           value={Number.isFinite(value) ? String(value) : ""}
           onChange={(event) => onChange(Number(event.target.value))}
-          className="text-center font-mono tabular-nums"
+          className="min-w-0 text-center font-mono tabular-nums"
           aria-label={label}
         />
         <button
@@ -171,7 +171,7 @@ function OpeningList({
       ) : (
         <ul className="space-y-2">
           {items.map((item, index) => (
-            <li key={item.id} className="grid grid-cols-[1fr_1fr_auto] gap-2">
+            <li key={item.id} className="grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2">
               <Input
                 inputMode="decimal"
                 aria-label={`${label} ${index + 1} width`}
@@ -301,7 +301,7 @@ function RoomStrip({ job }: { job: JobEstimate }) {
 
   return (
     <div className="space-y-3">
-      <div className="-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]">
+      <div className="flex min-w-0 gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
         {rooms.map((room) => {
           const active = room.id === activeRoomId;
           return (
@@ -310,7 +310,7 @@ function RoomStrip({ job }: { job: JobEstimate }) {
               type="button"
               onClick={() => selectRoom(room.id)}
               className={cn(
-                "flex h-14 min-w-[9.5rem] shrink-0 flex-col items-start justify-center rounded-lg px-3 text-left transition-[background-color,color,box-shadow] duration-150",
+                "flex h-14 min-w-[8.25rem] flex-1 shrink-0 flex-col items-start justify-center rounded-lg px-3 text-left transition-[background-color,color,box-shadow] duration-150 sm:min-w-[9.5rem] sm:flex-none",
                 active ? "bg-ink text-ink-foreground" : "bg-surface text-fg shadow-border hover:bg-paper-alt",
               )}
             >
@@ -322,8 +322,8 @@ function RoomStrip({ job }: { job: JobEstimate }) {
           );
         })}
       </div>
-      <div className="flex flex-wrap items-end gap-2">
-        <div className="min-w-[10rem] flex-1 space-y-1.5">
+      <div className="flex min-w-0 flex-wrap items-end gap-2">
+        <div className="min-w-0 flex-1 basis-full space-y-1.5 sm:min-w-[10rem] sm:basis-auto">
           <Label htmlFor="room-name">Room name</Label>
           <Input
             id="room-name"
@@ -338,7 +338,7 @@ function RoomStrip({ job }: { job: JobEstimate }) {
             setAddKey((key) => key + 1);
           }}
         >
-          <SelectTrigger className="w-[11.5rem]" aria-label="Add a room">
+          <SelectTrigger className="w-full sm:w-[11.5rem]" aria-label="Add a room">
             <SelectValue placeholder="Add a room" />
           </SelectTrigger>
           <SelectContent>
@@ -349,19 +349,21 @@ function RoomStrip({ job }: { job: JobEstimate }) {
             ))}
           </SelectContent>
         </Select>
-        <Button type="button" variant="outline" onClick={() => duplicateRoom(activeRoomId)}>
-          <Copy className="size-4" />
-          Duplicate
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          disabled={rooms.length <= 1}
-          onClick={() => removeRoom(activeRoomId)}
-        >
-          <Trash2 className="size-4" />
-          Remove
-        </Button>
+        <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
+          <Button type="button" variant="outline" onClick={() => duplicateRoom(activeRoomId)}>
+            <Copy className="size-4" />
+            Duplicate
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={rooms.length <= 1}
+            onClick={() => removeRoom(activeRoomId)}
+          >
+            <Trash2 className="size-4" />
+            Remove
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -392,32 +394,33 @@ function DownloadPdfButtons({
 
   return (
     <div className="space-y-1.5">
-      <div className={cn("flex gap-2", compact ? "min-w-0 flex-col" : "flex-col")}>
+      <div className={cn("flex gap-2", compact ? "min-w-0 shrink-0" : "flex-col")}>
         <Button
           type="button"
           onClick={() => onDownload("contractor")}
           disabled={busy != null}
-          size={compact ? "sm" : "default"}
+          size={compact ? "icon" : "default"}
           aria-label="Contractor PDF"
-          className="w-full"
+          className={compact ? undefined : "w-full"}
         >
           <FileDown className="size-4" />
-          {busy === "contractor" ? "Building…" : "Contractor PDF"}
+          {compact ? null : busy === "contractor" ? "Building…" : "Contractor PDF"}
         </Button>
         <Button
           type="button"
           variant="outline"
           onClick={() => onDownload("customer")}
           disabled={busy != null}
-          size={compact ? "sm" : "default"}
+          size={compact ? "icon" : "default"}
+          aria-label="Customer copy"
           className={
             compact
-              ? "w-full"
+              ? undefined
               : "w-full border-ink-foreground/20 bg-ink-foreground/10 text-ink-foreground hover:bg-ink-foreground/15"
           }
         >
           <FileText className="size-4" />
-          {busy === "customer" ? "Building PDF…" : "Customer copy"}
+          {compact ? null : busy === "customer" ? "Building PDF…" : "Customer copy"}
         </Button>
       </div>
       {error ? <p className="text-xs text-primary">{error}</p> : null}
@@ -441,12 +444,12 @@ function EstimateRail({ job, activeRoomId }: { job: JobEstimate; activeRoomId: s
         }));
 
   return (
-    <aside className="lg:sticky lg:top-24">
+    <aside className="min-w-0 max-w-full lg:sticky lg:top-24">
       <div className="rounded-xl bg-ink p-5 text-ink-foreground shadow-border sm:p-6">
         <p className="text-[11px] font-medium tracking-[0.18em] text-ink-foreground/60 uppercase">
           The job
         </p>
-        <p className="mt-2 font-display text-4xl font-medium tracking-tight tabular-nums sm:text-5xl">
+        <p className="mt-2 break-all font-display text-4xl font-medium tracking-tight tabular-nums sm:text-5xl">
           {money(job.grandTotal)}
         </p>
         <p className="mt-2 text-sm text-ink-foreground/70">
@@ -500,10 +503,10 @@ function EstimateRail({ job, activeRoomId }: { job: JobEstimate; activeRoomId: s
           <DownloadPdfButtons job={job} />
         </div>
       </div>
-      <div className="mt-4 rounded-xl bg-card p-4 shadow-border sm:p-5">
-        <div className="flex items-center justify-between gap-2">
+      <div className="mt-4 min-w-0 rounded-xl bg-card p-4 shadow-border sm:p-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[11px] font-medium tracking-[0.18em] text-muted uppercase">Line items</p>
-          <div className="flex rounded-full bg-surface p-1">
+          <div className="flex w-fit max-w-full rounded-full bg-surface p-1">
             <button
               type="button"
               onClick={() => setListMode("room")}
@@ -587,16 +590,16 @@ export function EstimatorApp() {
 
   return (
     <>
-      <div className="app-shell min-h-dvh overflow-x-hidden pb-28 lg:pb-10">
-        <header className="sticky top-0 z-30 border-b border-border/80 bg-bg/90 backdrop-blur-md">
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-            <div className="flex items-center gap-3">
-              <span className="flex size-10 items-center justify-center rounded-md bg-ink font-display text-sm font-medium text-ink-foreground">
+      <div className="app-shell min-h-dvh w-full max-w-full overflow-x-clip pb-[calc(6.5rem+env(safe-area-inset-bottom))] lg:pb-10">
+        <header className="sticky top-0 z-30 border-b border-border/80 bg-bg/90 pt-[env(safe-area-inset-top)] backdrop-blur-md">
+          <div className="mx-auto flex w-full min-w-0 max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-ink font-display text-sm font-medium text-ink-foreground">
                 {COMPANY.mark}
               </span>
-              <div>
-                <p className="font-display text-base font-medium tracking-tight sm:text-lg">{COMPANY.name}</p>
-                <p className="text-xs text-muted">{COMPANY.tagline}</p>
+              <div className="min-w-0">
+                <p className="truncate font-display text-base font-medium tracking-tight sm:text-lg">{COMPANY.name}</p>
+                <p className="truncate text-xs text-muted">{COMPANY.tagline}</p>
               </div>
             </div>
             <div className="hidden items-center gap-2 sm:flex">
@@ -611,20 +614,20 @@ export function EstimatorApp() {
                 Start over
               </Button>
             </div>
-            <div className="flex items-center gap-2 sm:hidden">
-              <EstimateLogButton compact />
-              <SaveEstimateButton tone="light" />
+            <div className="flex shrink-0 items-center gap-1 sm:hidden">
+              <EstimateLogButton icon />
+              <SaveEstimateButton tone="light" icon />
             </div>
           </div>
         </header>
 
-        <main className="mx-auto grid max-w-6xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-start">
-          <div className="min-w-0 space-y-5 overflow-x-clip">
-            <section className="rounded-xl bg-card px-5 py-6 shadow-border sm:px-8 sm:py-8">
+        <main className="mx-auto grid w-full min-w-0 max-w-6xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,24rem)] lg:items-start">
+          <div className="min-w-0 max-w-full space-y-5">
+            <section className="min-w-0 max-w-full rounded-xl bg-card px-5 py-6 shadow-border sm:px-8 sm:py-8">
               <p className="text-[11px] font-medium tracking-[0.18em] text-muted uppercase">
                 {COMPANY.region} · {PRICE_AS_OF}
               </p>
-              <h1 className="mt-2 max-w-xl font-display text-3xl font-medium tracking-tight sm:text-4xl">
+              <h1 className="mt-2 max-w-xl font-display text-3xl font-medium tracking-tight text-pretty sm:text-4xl">
                 One house. Every room. One number.
               </h1>
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted sm:text-base">
@@ -776,15 +779,13 @@ export function EstimatorApp() {
         </main>
       </div>
 
-      <div className="app-shell fixed inset-x-0 bottom-0 z-30 border-t border-border bg-bg/95 px-4 py-3 backdrop-blur-md lg:hidden">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-          <div className="min-w-0">
+      <div className="app-shell fixed inset-x-0 bottom-0 z-30 border-t border-border bg-bg/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
+        <div className="mx-auto flex w-full min-w-0 max-w-6xl items-center gap-3">
+          <div className="min-w-0 flex-1">
             <p className="text-[11px] tracking-wide text-muted uppercase">Job total</p>
-            <p className="font-display text-2xl font-medium tabular-nums">{money(job.grandTotal)}</p>
+            <p className="font-display text-xl font-medium tabular-nums leading-none sm:text-2xl">{money(job.grandTotal)}</p>
           </div>
-          <div className="w-[9.5rem] shrink-0">
-            <DownloadPdfButtons job={job} compact />
-          </div>
+          <DownloadPdfButtons job={job} compact />
         </div>
       </div>
     </>

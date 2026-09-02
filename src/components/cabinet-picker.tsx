@@ -145,7 +145,7 @@ export function CabinetPicker({ room }: { room: JobRoom }) {
             const labor = item ? cabinetLaborFor(item) * pick.quantity : 0;
             const material = price != null ? price * pick.quantity : 0;
             return (
-              <li key={pick.id} className="flex items-start justify-between gap-3 py-2.5">
+              <li key={pick.id} className="flex min-w-0 flex-col gap-2 py-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm text-fg">
                     {pick.sku} {item ? `· ${item.name}` : ""}
@@ -155,7 +155,7 @@ export function CabinetPicker({ room }: { room: JobRoom }) {
                     {labor ? ` + ${money(labor)} labor` : " material only"}
                   </p>
                 </div>
-                <div className="flex shrink-0 items-center gap-1">
+                <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto">
                   <button
                     type="button"
                     className="inline-flex size-9 items-center justify-center rounded-md bg-card text-fg shadow-border"
@@ -191,17 +191,17 @@ export function CabinetPicker({ room }: { room: JobRoom }) {
       )}
       {picks.length > 0 ? (
         <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-md bg-wash px-2 py-2">
+          <div className="min-w-0 rounded-md bg-wash px-1 py-2 sm:px-2">
             <p className="text-[11px] tracking-wide text-muted uppercase">Material</p>
-            <p className="font-mono text-sm tabular-nums">{money(totals.material)}</p>
+            <p className="truncate font-mono text-xs tabular-nums sm:text-sm">{money(totals.material)}</p>
           </div>
-          <div className="rounded-md bg-wash px-2 py-2">
+          <div className="min-w-0 rounded-md bg-wash px-1 py-2 sm:px-2">
             <p className="text-[11px] tracking-wide text-muted uppercase">Labor</p>
-            <p className="font-mono text-sm tabular-nums">{money(totals.labor)}</p>
+            <p className="truncate font-mono text-xs tabular-nums sm:text-sm">{money(totals.labor)}</p>
           </div>
-          <div className="rounded-md bg-wash px-2 py-2">
+          <div className="min-w-0 rounded-md bg-wash px-1 py-2 sm:px-2">
             <p className="text-[11px] tracking-wide text-muted uppercase">Installed</p>
-            <p className="font-mono text-sm tabular-nums">{money(totals.installed)}</p>
+            <p className="truncate font-mono text-xs tabular-nums sm:text-sm">{money(totals.installed)}</p>
           </div>
         </div>
       ) : null}
