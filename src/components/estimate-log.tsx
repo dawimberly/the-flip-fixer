@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { fieldCodeReady, loadFieldCode, saveFieldCode } from "@/lib/crew-code";
 import { formatSavedAt, searchEstimateLog } from "@/lib/estimate-log";
 import { useEstimatorStore } from "@/lib/estimator-store";
 import { money } from "@/lib/utils";
@@ -56,11 +57,12 @@ export function SaveEstimateButton({
   const lastSavedAt = useEstimatorStore((s) => s.lastSavedAt);
   const saveToLog = useEstimatorStore((s) => s.saveToLog);
   const [flash, setFlash] = useState<string | null>(null);
+  const linked = fieldCodeReady();
 
   function save(asNew = false) {
     const record = saveToLog(asNew);
     if (!record) return;
-    setFlash(asNew ? "Saved as new" : "Saved to log");
+    setFlash(asNew ? "Saved as new" : linked ? "Saved on every device" : "Saved on this device");
     window.setTimeout(() => setFlash(null), 1800);
   }
 
@@ -95,8 +97,51 @@ export function SaveEstimateButton({
         </button>
       ) : null}
       <p className="text-center text-xs text-ink-foreground/55">
-        {flash ?? (lastSavedAt ? `Last saved ${formatSavedAt(lastSavedAt)}` : "Stays on this device")}
+        {flash ??
+          (lastSavedAt
+            ? `Last saved ${formatSavedAt(lastSavedAt)}`
+            : linked
+              ? "Saves to phone and desk"
+              : "Set a field code in the log to sync")}
       </p>
+    </div>
+  );
+}
+
+function FieldCodeBox() {
+  const refreshLog = useEstimatorStore((s) => s.refreshLog);
+  const [value, setValue] = useState(loadFieldCode);
+  const [status, setStatus] = useState<string | null>(null);
+
+  function apply() {
+    saveFieldCode(value);
+    if (!fieldCodeReady(value)) {
+      setStatus("Use at least 4 characters.");
+      return;
+    }
+    setStatus("Linked. Opening the log now pulls the same jobs.");
+    refreshLog();
+  }
+
+  return (
+    <div className="rounded-lg bg-wash px-3 py-3">
+      <p className="text-xs font-medium text-fg">Field code</p>
+      <p className="mt-1 text-xs text-muted">
+        Same code on the phone and the computer. That is how William Mendez leaves the truck and waits on the desk.
+      </p>
+      <div className="mt-2 flex gap-2">
+        <Input
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          placeholder="e.g. mendez210"
+          aria-label="Field code"
+          className="font-mono"
+        />
+        <Button type="button" variant="outline" onClick={apply}>
+          Link
+        </Button>
+      </div>
+      {status ? <p className="mt-2 text-xs text-muted">{status}</p> : null}
     </div>
   );
 }
@@ -123,11 +168,12 @@ function EstimateLogDialog({
           <p className="text-[11px] font-medium tracking-[0.18em] text-muted uppercase">The file</p>
           <DialogTitle>Estimate log</DialogTitle>
           <DialogDescription id="estimate-log-copy">
-            Pull up last week's number before you walk back in. Stored on this phone or computer.
+            Pull up last week's number before you walk back in. Same field code, same jobs.
           </DialogDescription>
         </DialogHeader>
         <div className="px-5 pb-5 sm:px-6">
-          <div className="relative">
+          <FieldCodeBox />
+          <div className="relative mt-4">
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted" />
             <Input
               value={query}
@@ -210,8 +256,7 @@ function EstimateLogDialog({
             )}
           </div>
           <p className="mt-4 text-xs text-muted">
-            This log lives in the browser on this device. Accounts come later if you want the same jobs on
-            every phone.
+            Set the field code on both devices, then Save. The job travels with you.
           </p>
         </div>
       </DialogContent>
