@@ -5,9 +5,11 @@ import { cn } from "@/lib/utils";
 
 export function OpToggle() {
   const laborRate = useEstimatorStore((s) => s.laborRate);
+  const lastOpPercent = useEstimatorStore((s) => s.lastOpPercent);
   const opEnabled = useEstimatorStore((s) => s.opEnabled);
   const setOpPercent = useEstimatorStore((s) => s.setOpPercent);
   const setOpEnabled = useEstimatorStore((s) => s.setOpEnabled);
+  const shown = opEnabled ? laborRate : lastOpPercent;
 
   return (
     <div className="space-y-3">
@@ -38,12 +40,12 @@ export function OpToggle() {
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="labor-rate" className="text-ink-foreground/60">
-          {opEnabled ? `O&P ${laborRate}%` : "O&P off \u2014 installed only"}
+          {opEnabled ? `O&P ${shown}%` : "O&P off \u2014 installed only"}
         </Label>
         <Input
           id="labor-rate"
           inputMode="decimal"
-          value={laborRate}
+          value={shown}
           disabled={!opEnabled}
           onChange={(event) => setOpPercent(Number(event.target.value))}
           className="bg-ink-foreground/10 font-mono tabular-nums text-ink-foreground shadow-none ring-1 ring-ink-foreground/15 disabled:opacity-50"
