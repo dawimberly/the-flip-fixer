@@ -25,6 +25,7 @@ import {
   type SelectionValue,
 } from "@/lib/estimator";
 import { defaultFinishId } from "@/lib/cabinets";
+import { deleteJobFromCloud, pushJobToCloud, syncJobsFromCloud } from "@/lib/job-sync";
 import { DEFAULT_OP_PERCENT, effectiveOpPercent, rememberOpPercent } from "@/lib/op";
 import { normalizeRooms, selectionList } from "@/lib/selections";
 
@@ -388,11 +389,19 @@ export const useEstimatorStore = create<EstimatorState>((set, get) => ({
         log,
         hydrated: true,
       });
-      return;
+    } else {
+      set({ rooms: normalizeRooms(get().rooms), log, hydrated: true });
     }
-    set({ rooms: normalizeRooms(get().rooms), log, hydrated: true });
+    void syncJobsFromCloud().then((nextLog) => {
+      if (nextLog) set({ log: nextLog });
+    });
   },
-  refreshLog: () => set({ log: loadEstimateLog() }),
+  refreshLog: () => {
+    set({ log: loadEstimateLog() });
+    void syncJobsFromCloud().then((nextLog) => {
+      if (nextLog) set({ log: nextLog });
+    });
+  },
   saveToLog: (asNew = false) => {
     if (typeof window === "undefined") return null;
     const state = get();
@@ -411,6 +420,7 @@ export const useEstimatorStore = create<EstimatorState>((set, get) => ({
       lastSavedAt: record.savedAt,
       log: loadEstimateLog(),
     });
+    void pushJobToCloud(record);
     return record;
   },
   openSaved: (id) => {
@@ -433,6 +443,7 @@ export const useEstimatorStore = create<EstimatorState>((set, get) => ({
   },
   deleteSaved: (id) => {
     deleteSavedEstimate(id);
+    void deleteJobFromCloud(id);
     const state = get();
     set({
       log: loadEstimateLog(),
