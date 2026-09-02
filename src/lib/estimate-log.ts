@@ -4,6 +4,7 @@ import {
   type ClientInfo,
   type JobRoom,
 } from "@/lib/estimator";
+import { normalizeRooms } from "@/lib/selections";
 
 const LOG_KEY = "flipfixer.estimate-log.v1";
 const DRAFT_KEY = "flipfixer.estimate-draft.v1";
@@ -78,10 +79,20 @@ function isSavedEstimate(value: unknown): value is SavedEstimate {
   return Boolean(item.id && item.savedAt && item.snapshot?.rooms && item.snapshot.client);
 }
 
+function normalizeSnapshot(snapshot: EstimateSnapshot): EstimateSnapshot {
+  return {
+    rooms: normalizeRooms(snapshot.rooms),
+    laborRate: snapshot.laborRate,
+    client: snapshot.client,
+  };
+}
+
 export function loadEstimateLog(): SavedEstimate[] {
   const raw = readJson<unknown>(LOG_KEY);
   const list = Array.isArray(raw) ? raw.filter(isSavedEstimate) : [];
-  return list.sort((a, b) => b.savedAt.localeCompare(a.savedAt));
+  return list
+    .map((item) => ({ ...item, snapshot: normalizeSnapshot(item.snapshot) }))
+    .sort((a, b) => b.savedAt.localeCompare(a.savedAt));
 }
 
 function writeEstimateLog(list: SavedEstimate[]) {
@@ -91,19 +102,18 @@ function writeEstimateLog(list: SavedEstimate[]) {
 export function loadDraft(): EstimateDraft | null {
   const draft = readJson<EstimateDraft>(DRAFT_KEY);
   if (!draft?.rooms?.length || !draft.client) return null;
-  return draft;
+  return {
+    ...draft,
+    rooms: normalizeRooms(draft.rooms),
+  };
 }
 
 export function saveDraft(draft: EstimateDraft) {
-  writeJson(DRAFT_KEY, cloneJson(draft));
+  writeJson(DRAFT_KEY, cloneJson({ ...draft, rooms: normalizeRooms(draft.rooms) }));
 }
 
 export function snapshotFromJob(input: EstimateSnapshot): EstimateSnapshot {
-  return cloneJson({
-    rooms: input.rooms,
-    laborRate: input.laborRate,
-    client: input.client,
-  });
+  return cloneJson(normalizeSnapshot(input));
 }
 
 export function upsertSavedEstimate(
@@ -111,11 +121,12 @@ export function upsertSavedEstimate(
   id?: string | null,
 ): SavedEstimate {
   const list = loadEstimateLog();
+  const normalized = snapshotFromJob(snapshot);
   const record: SavedEstimate = {
     id: id && list.some((item) => item.id === id) ? id : crypto.randomUUID(),
     savedAt: new Date().toISOString(),
-    snapshot: snapshotFromJob(snapshot),
-    summary: summarizeSnapshot(snapshot),
+    snapshot: normalized,
+    summary: summarizeSnapshot(normalized),
   };
   writeEstimateLog([record, ...list.filter((item) => item.id !== record.id)]);
   return record;
