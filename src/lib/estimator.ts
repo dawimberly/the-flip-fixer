@@ -510,7 +510,6 @@ export function sampleShadySpringsJob() {
   const lvp = { name: "Luxury vinyl plank — installed", quantity: null };
   const paint1 = { name: "Paint drywall — one coat", quantity: null };
   const fan = { name: "Ceiling fan (labor only, existing box, owner supplied)", quantity: 1 };
-  const flush = { name: "Light fixture — ceiling (labor only, owner supplied)", quantity: 2 };
   const bathFan = { name: "Bathroom ventilation fan", quantity: 1 };
   const carpetDemo = { name: "Carpet removal and haul-off", quantity: null };
   const rooms: JobRoom[] = [
@@ -528,7 +527,8 @@ export function sampleShadySpringsJob() {
         flooring: lvp,
         "walls/paint": paint1,
         "trim/baseboards": cheapBase(),
-        lighting: flush,
+        // One fan in kitchen (not two fixtures). Matching fan lives in Dining.
+        lighting: fan,
         ceiling: popcornAndCeilingPaint(),
         windows: winInsert(),
       },
@@ -719,6 +719,29 @@ export function sampleShadySpringsJob() {
       doors: [
         { id: "ss-h-d1", widthFt: 2.5, heightFt: 6.67 },
         { id: "ss-h-d2", widthFt: 2.5, heightFt: 6.67 },
+      ],
+      windows: [],
+      extraCategories: [],
+      selections: {
+        flooring: lvp,
+        "walls/paint": paint1,
+        "trim/baseboards": cheapBase(),
+        ceiling: popcornAndCeilingPaint(),
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      // Combined closet floor area ≈ 108 sf — flooring, walls/paint, trim, ceilings.
+      id: "ss-closets",
+      label: "Closets (combined)",
+      roomTypeId: "closet",
+      lengthFt: 12,
+      widthFt: 9,
+      heightFt: 8,
+      doors: [
+        { id: "ss-cl-d1", widthFt: 2.5, heightFt: 6.67 },
+        { id: "ss-cl-d2", widthFt: 2.5, heightFt: 6.67 },
       ],
       windows: [],
       extraCategories: [],
