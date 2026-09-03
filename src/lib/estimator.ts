@@ -201,9 +201,31 @@ export function uniqueRoomLabel(base: string, rooms: JobRoom[]) {
   return `${base} ${n}`;
 }
 
+/**
+ * Surfaces every interior room has. Always shown; SKUs stay empty until picked.
+ * Room-type extras (cabinets, tile, …) stack on top. Odd lines → “Add another category”.
+ * Framing / AI description: later.
+ */
+export const UNIVERSAL_SURFACE_CATEGORIES = [
+  "flooring",
+  "drywall",
+  "walls/paint",
+  "ceiling",
+] as const;
+
+const NO_UNIVERSAL_SURFACES = new Set(["exterior_outdoor"]);
+
 export function visibleCategoriesFor(room: JobRoom) {
   const type = getRoom(room.roomTypeId);
-  const ids = [...type.typical_categories, ...room.extraCategories, ...Object.keys(room.selections)];
+  const surfaces = NO_UNIVERSAL_SURFACES.has(type.room_id)
+    ? []
+    : [...UNIVERSAL_SURFACE_CATEGORIES];
+  const ids = [
+    ...surfaces,
+    ...type.typical_categories,
+    ...room.extraCategories,
+    ...Object.keys(room.selections),
+  ];
   return [...new Set(ids)].filter((id) => catalog[id]);
 }
 
