@@ -418,6 +418,31 @@
         "cost_per_unit": 22.5
       },
       {
+        "name": "Ceramic tile — wall, installed",
+        "unit": "sq ft",
+        "cost_per_unit": 24.5
+      },
+      {
+        "name": "Ceramic tile removal — wall",
+        "unit": "sq ft",
+        "cost_per_unit": 4.15
+      },
+      {
+        "name": "Ceramic tile removal — floor",
+        "unit": "sq ft",
+        "cost_per_unit": 3.85
+      },
+      {
+        "name": "Cement board — 1/2 in shower/tub walls",
+        "unit": "sq ft",
+        "cost_per_unit": 5.45
+      },
+      {
+        "name": "Waterproofing membrane — liquid applied (RedGard)",
+        "unit": "sq ft",
+        "cost_per_unit": 3.25
+      },
+      {
         "name": "Tile base — 6x6 high grade",
         "unit": "linear ft",
         "cost_per_unit": 21

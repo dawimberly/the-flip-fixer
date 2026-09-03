@@ -506,10 +506,13 @@ function popcornAndCeilingPaint() {
 }
 
 export function sampleShadySpringsJob() {
+  /** Rebuild of Flip-Fixer-make-ready contractor/customer PDFs — target $45,623.31. */
   const lvp = { name: "Luxury vinyl plank — installed", quantity: null };
   const paint1 = { name: "Paint drywall — one coat", quantity: null };
   const fan = { name: "Ceiling fan (labor only, existing box, owner supplied)", quantity: 1 };
   const flush = { name: "Light fixture — ceiling (labor only, owner supplied)", quantity: 2 };
+  const bathFan = { name: "Bathroom ventilation fan", quantity: 1 };
+  const carpetDemo = { name: "Carpet removal and haul-off", quantity: null };
   const rooms: JobRoom[] = [
     {
       id: "ss-kitchen",
@@ -520,7 +523,7 @@ export function sampleShadySpringsJob() {
       heightFt: 8,
       doors: [{ id: "ss-k-d", widthFt: 2.5, heightFt: 6.67 }],
       windows: [{ id: "ss-k-w", widthFt: 3, heightFt: 4 }],
-      extraCategories: ["ceiling", "windows"],
+      extraCategories: ["windows"],
       selections: {
         flooring: lvp,
         "walls/paint": paint1,
@@ -541,15 +544,14 @@ export function sampleShadySpringsJob() {
       heightFt: 8,
       doors: [{ id: "ss-m-d", widthFt: 2.5, heightFt: 6.67 }],
       windows: [{ id: "ss-m-w", widthFt: 3, heightFt: 4 }],
-      extraCategories: ["ceiling", "windows"],
+      extraCategories: ["windows"],
       selections: {
-        flooring: [lvp, { name: "Carpet removal and haul-off", quantity: null }],
+        flooring: lvp,
         "walls/paint": paint1,
         "trim/baseboards": cheapBase(),
         doors: { name: "Interior door unit — standard grade", quantity: 1 },
         ceiling: popcornAndCeilingPaint(),
         windows: winInsert(),
-        drywall: { name: "Drywall patch — small", quantity: 1 },
       },
       cabinetFinishId: "gs",
       cabinets: [],
@@ -566,12 +568,16 @@ export function sampleShadySpringsJob() {
         { id: "ss-l-w1", widthFt: 3, heightFt: 4 },
         { id: "ss-l-w2", widthFt: 3, heightFt: 4 },
       ],
-      extraCategories: ["ceiling", "windows"],
+      extraCategories: ["windows"],
       selections: {
-        flooring: lvp,
+        flooring: [lvp, carpetDemo],
         "walls/paint": paint1,
         "trim/baseboards": cheapBase(),
         lighting: fan,
+        drywall: {
+          name: "5/8 in drywall — hung, taped, ready for texture",
+          quantity: 192,
+        },
         ceiling: popcornAndCeilingPaint(),
         windows: { ...winInsert(), quantity: 2 },
       },
@@ -587,15 +593,22 @@ export function sampleShadySpringsJob() {
       heightFt: 8,
       doors: [{ id: "ss-mb-d", widthFt: 2.5, heightFt: 6.67 }],
       windows: [],
-      extraCategories: ["ceiling"],
+      extraCategories: [],
       selections: {
-        flooring: { name: "Tile floor covering — 2x2", quantity: null },
+        flooring: [
+          { name: "Underlayment — 1/4 in cement board", quantity: 8 },
+          { name: "Tile floor covering — 2x2", quantity: 8 },
+        ],
         "walls/paint": paint1,
         "tile/shower surround": [
-          { name: "Tile base — 6x6 high grade", quantity: 26 },
-          { name: "Tub/surround redo — allowance (confirm refinish vs replace)", quantity: 1 },
+          { name: "Ceramic tile removal — wall", quantity: 68 },
+          { name: "Ceramic tile removal — floor", quantity: 8 },
+          { name: "Cement board — 1/2 in shower/tub walls", quantity: 68 },
+          { name: "Waterproofing membrane — liquid applied (RedGard)", quantity: 76 },
+          { name: "Ceramic tile — wall, installed", quantity: 68 },
+          { name: "Shower curb — site-built ceramic/porcelain", quantity: 2.5 },
         ],
-        lighting: { name: "Bathroom ventilation fan", quantity: 1 },
+        lighting: bathFan,
         ceiling: popcornAndCeilingPaint(),
       },
       cabinetFinishId: "gs",
@@ -610,9 +623,9 @@ export function sampleShadySpringsJob() {
       heightFt: 8,
       doors: [{ id: "ss-b2-d", widthFt: 2.5, heightFt: 6.67 }],
       windows: [{ id: "ss-b2-w", widthFt: 3, heightFt: 4 }],
-      extraCategories: ["ceiling", "windows"],
+      extraCategories: ["windows"],
       selections: {
-        flooring: [lvp, { name: "Carpet removal and haul-off", quantity: null }],
+        flooring: lvp,
         "walls/paint": paint1,
         "trim/baseboards": cheapBase(),
         lighting: fan,
@@ -630,17 +643,23 @@ export function sampleShadySpringsJob() {
       widthFt: 5,
       heightFt: 8,
       doors: [{ id: "ss-gb-d", widthFt: 2.5, heightFt: 6.67 }],
+      // Insert window is priced as a line; do not cut it out of wall area (matches PDF).
       windows: [],
-      extraCategories: ["ceiling"],
+      extraCategories: ["windows"],
       selections: {
-        flooring: { name: "Tile floor covering — 2x2", quantity: null },
+        flooring: lvp,
         "walls/paint": paint1,
         "tile/shower surround": [
-          { name: "Tile base — 6x6 high grade", quantity: 24 },
+          { name: "Ceramic tile removal — floor", quantity: 35 },
+          { name: "Ceramic tile removal — wall", quantity: 70 },
+          { name: "Cement board — 1/2 in shower/tub walls", quantity: 70 },
+          { name: "Waterproofing membrane — liquid applied (RedGard)", quantity: 70 },
+          { name: "Ceramic tile — wall, installed", quantity: 70 },
           { name: "Bathtub reglaze", quantity: 1 },
         ],
-        lighting: { name: "Bathroom ventilation fan", quantity: 1 },
+        lighting: bathFan,
         ceiling: popcornAndCeilingPaint(),
+        windows: winInsert(),
       },
       cabinetFinishId: "gs",
       cabinets: [],
@@ -654,7 +673,7 @@ export function sampleShadySpringsJob() {
       heightFt: 8,
       doors: [{ id: "ss-di-d", widthFt: 6, heightFt: 6.67 }],
       windows: [],
-      extraCategories: ["ceiling", "doors"],
+      extraCategories: ["doors"],
       selections: {
         flooring: lvp,
         "walls/paint": paint1,
@@ -678,9 +697,9 @@ export function sampleShadySpringsJob() {
       heightFt: 8,
       doors: [{ id: "ss-b3-d", widthFt: 2.5, heightFt: 6.67 }],
       windows: [{ id: "ss-b3-w", widthFt: 3, heightFt: 4 }],
-      extraCategories: ["ceiling", "windows"],
+      extraCategories: ["windows"],
       selections: {
-        flooring: [lvp, { name: "Carpet removal and haul-off", quantity: null }],
+        flooring: lvp,
         "walls/paint": paint1,
         "trim/baseboards": cheapBase(),
         lighting: fan,
@@ -702,7 +721,7 @@ export function sampleShadySpringsJob() {
         { id: "ss-h-d2", widthFt: 2.5, heightFt: 6.67 },
       ],
       windows: [],
-      extraCategories: ["ceiling"],
+      extraCategories: [],
       selections: {
         flooring: lvp,
         "walls/paint": paint1,
@@ -727,11 +746,19 @@ export function sampleShadySpringsJob() {
           { name: "Garage door — single car, painted steel, 7x7", quantity: 1 },
           { name: "Garage door opener — add if existing is dead", quantity: 1 },
         ],
-        roofing: { name: "Roof patch — garage gable eave, missing shingles (not a reroof)", quantity: 1 },
-        insulation: { name: "Attic insulation — allowance until depth is measured", quantity: 1 },
-        windows: { name: "Vinyl replacement dual pane — CMU / block opening", quantity: 1 },
+        roofing: {
+          name: "Roof patch — garage gable eave, missing shingles (not a reroof)",
+          quantity: 1,
+        },
+        insulation: {
+          name: "Attic insulation — allowance until depth is measured",
+          quantity: 1,
+        },
+        windows: {
+          name: "Vinyl replacement dual pane — CMU / block opening",
+          quantity: 1,
+        },
         cleanup: { name: "Debris haul-off", quantity: 1 },
-        ceiling: { name: "5/8 in drywall — hung, taped, ready for texture", quantity: 192 },
       },
       cabinetFinishId: "gs",
       cabinets: [],
