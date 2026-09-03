@@ -485,6 +485,7 @@ export function EstimatorApp() {
   const setDimension = useEstimatorStore((s) => s.setDimension);
   const addCategory = useEstimatorStore((s) => s.addCategory);
   const loadSample = useEstimatorStore((s) => s.loadSample);
+  const loadShadySprings = useEstimatorStore((s) => s.loadShadySprings);
   const startOver = useEstimatorStore((s) => s.startOver);
   const client = useEstimatorStore((s) => s.client);
   const setClient = useEstimatorStore((s) => s.setClient);
@@ -526,6 +527,9 @@ export function EstimatorApp() {
                 <House className="size-4" />
                 Sample house
               </Button>
+              <Button type="button" variant="ghost" size="sm" onClick={loadShadySprings}>
+                Shady Springs
+              </Button>
               <Button type="button" variant="outline" size="sm" onClick={startOver}>
                 <RotateCcw className="size-4" />
                 Start over
@@ -563,6 +567,9 @@ export function EstimatorApp() {
               <div className="mt-5 flex flex-wrap gap-2 sm:hidden">
                 <Button type="button" variant="outline" size="sm" onClick={loadSample}>
                   Sample house
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={loadShadySprings}>
+                  Shady Springs
                 </Button>
                 <Button type="button" variant="ghost" size="sm" onClick={startOver}>
                   Start over

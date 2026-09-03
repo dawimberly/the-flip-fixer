@@ -453,6 +453,276 @@ export function sampleJob() {
   };
 }
 
+export const MENDEZ_CLIENT: ClientInfo = {
+  name: "William Mendez",
+  address: "3303 Shady Springs dr. San Antonio 78230",
+  phone: "2103864699",
+  email: "wmendez2487@gmail.com",
+  propertyName: "Make ready",
+  propertyAddress: "3303 Shady Springs dr. San Antonio 78230",
+};
+
+function winInsert() {
+  return {
+    name: "Vinyl insert dual pane — asbestos cement siding, interior only, do not disturb exterior",
+    quantity: 1,
+  };
+}
+
+function cheapBase() {
+  return [
+    { name: "Baseboard — 2 1/4 in MDF", quantity: null },
+    { name: "Seal (1 coat) & paint (2 coats) baseboard", quantity: null },
+  ];
+}
+
+function popcornAndCeilingPaint() {
+  return [
+    { name: "Popcorn ceiling removal — scrape only, no sand", quantity: null },
+    { name: "Paint ceiling — 2 coats", quantity: null },
+  ];
+}
+
+export function sampleShadySpringsJob() {
+  const lvp = { name: "Luxury vinyl plank — installed", quantity: null };
+  const paint1 = { name: "Paint drywall — one coat", quantity: null };
+  const fan = { name: "Ceiling fan (labor only, existing box, owner supplied)", quantity: 1 };
+  const flush = { name: "Light fixture — ceiling (labor only, owner supplied)", quantity: 2 };
+  const rooms: JobRoom[] = [
+    {
+      id: "ss-kitchen",
+      label: "Kitchen",
+      roomTypeId: "kitchen",
+      lengthFt: 15,
+      widthFt: 8,
+      heightFt: 8,
+      doors: [{ id: "ss-k-d", widthFt: 2.5, heightFt: 6.67 }],
+      windows: [{ id: "ss-k-w", widthFt: 3, heightFt: 4 }],
+      extraCategories: ["ceiling", "windows"],
+      selections: {
+        flooring: lvp,
+        "walls/paint": paint1,
+        "trim/baseboards": cheapBase(),
+        lighting: flush,
+        ceiling: popcornAndCeilingPaint(),
+        windows: winInsert(),
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      id: "ss-master",
+      label: "Master",
+      roomTypeId: "bedroom",
+      lengthFt: 10,
+      widthFt: 14,
+      heightFt: 8,
+      doors: [{ id: "ss-m-d", widthFt: 2.5, heightFt: 6.67 }],
+      windows: [{ id: "ss-m-w", widthFt: 3, heightFt: 4 }],
+      extraCategories: ["ceiling", "windows"],
+      selections: {
+        flooring: [lvp, { name: "Carpet removal and haul-off", quantity: null }],
+        "walls/paint": paint1,
+        "trim/baseboards": cheapBase(),
+        doors: { name: "Interior door unit — standard grade", quantity: 1 },
+        ceiling: popcornAndCeilingPaint(),
+        windows: winInsert(),
+        drywall: { name: "Drywall patch — small", quantity: 1 },
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      id: "ss-living",
+      label: "Living Room",
+      roomTypeId: "living_room",
+      lengthFt: 18,
+      widthFt: 14,
+      heightFt: 8,
+      doors: [{ id: "ss-l-d", widthFt: 2.5, heightFt: 6.67 }],
+      windows: [
+        { id: "ss-l-w1", widthFt: 3, heightFt: 4 },
+        { id: "ss-l-w2", widthFt: 3, heightFt: 4 },
+      ],
+      extraCategories: ["ceiling", "windows"],
+      selections: {
+        flooring: lvp,
+        "walls/paint": paint1,
+        "trim/baseboards": cheapBase(),
+        lighting: fan,
+        ceiling: popcornAndCeilingPaint(),
+        windows: { ...winInsert(), quantity: 2 },
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      id: "ss-mbath",
+      label: "Master bath",
+      roomTypeId: "bathroom",
+      lengthFt: 5,
+      widthFt: 8,
+      heightFt: 8,
+      doors: [{ id: "ss-mb-d", widthFt: 2.5, heightFt: 6.67 }],
+      windows: [],
+      extraCategories: ["ceiling"],
+      selections: {
+        flooring: { name: "Tile floor covering — 2x2", quantity: null },
+        "walls/paint": paint1,
+        "tile/shower surround": [
+          { name: "Tile base — 6x6 high grade", quantity: 26 },
+          { name: "Tub/surround redo — allowance (confirm refinish vs replace)", quantity: 1 },
+        ],
+        lighting: { name: "Bathroom ventilation fan", quantity: 1 },
+        ceiling: popcornAndCeilingPaint(),
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      id: "ss-br2",
+      label: "Bedroom 2",
+      roomTypeId: "bedroom",
+      lengthFt: 10,
+      widthFt: 10,
+      heightFt: 8,
+      doors: [{ id: "ss-b2-d", widthFt: 2.5, heightFt: 6.67 }],
+      windows: [{ id: "ss-b2-w", widthFt: 3, heightFt: 4 }],
+      extraCategories: ["ceiling", "windows"],
+      selections: {
+        flooring: [lvp, { name: "Carpet removal and haul-off", quantity: null }],
+        "walls/paint": paint1,
+        "trim/baseboards": cheapBase(),
+        lighting: fan,
+        ceiling: popcornAndCeilingPaint(),
+        windows: winInsert(),
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      id: "ss-gbath",
+      label: "Guest Bath",
+      roomTypeId: "bathroom",
+      lengthFt: 7,
+      widthFt: 5,
+      heightFt: 8,
+      doors: [{ id: "ss-gb-d", widthFt: 2.5, heightFt: 6.67 }],
+      windows: [],
+      extraCategories: ["ceiling"],
+      selections: {
+        flooring: { name: "Tile floor covering — 2x2", quantity: null },
+        "walls/paint": paint1,
+        "tile/shower surround": [
+          { name: "Tile base — 6x6 high grade", quantity: 24 },
+          { name: "Bathtub reglaze", quantity: 1 },
+        ],
+        lighting: { name: "Bathroom ventilation fan", quantity: 1 },
+        ceiling: popcornAndCeilingPaint(),
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      id: "ss-dining",
+      label: "Dining Room",
+      roomTypeId: "dining_room",
+      lengthFt: 12,
+      widthFt: 12,
+      heightFt: 8,
+      doors: [{ id: "ss-di-d", widthFt: 6, heightFt: 6.67 }],
+      windows: [],
+      extraCategories: ["ceiling", "doors"],
+      selections: {
+        flooring: lvp,
+        "walls/paint": paint1,
+        "trim/baseboards": cheapBase(),
+        lighting: fan,
+        ceiling: popcornAndCeilingPaint(),
+        doors: {
+          name: "Vinyl sliding patio door — dual pane, interior insert, do not disturb siding",
+          quantity: 1,
+        },
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      id: "ss-br3",
+      label: "Bedroom 3",
+      roomTypeId: "bedroom",
+      lengthFt: 10,
+      widthFt: 14,
+      heightFt: 8,
+      doors: [{ id: "ss-b3-d", widthFt: 2.5, heightFt: 6.67 }],
+      windows: [{ id: "ss-b3-w", widthFt: 3, heightFt: 4 }],
+      extraCategories: ["ceiling", "windows"],
+      selections: {
+        flooring: [lvp, { name: "Carpet removal and haul-off", quantity: null }],
+        "walls/paint": paint1,
+        "trim/baseboards": cheapBase(),
+        lighting: fan,
+        ceiling: popcornAndCeilingPaint(),
+        windows: winInsert(),
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      id: "ss-hall",
+      label: "Hallway by 2nd bath",
+      roomTypeId: "hallway_entryway",
+      lengthFt: 7,
+      widthFt: 5,
+      heightFt: 8,
+      doors: [
+        { id: "ss-h-d1", widthFt: 2.5, heightFt: 6.67 },
+        { id: "ss-h-d2", widthFt: 2.5, heightFt: 6.67 },
+      ],
+      windows: [],
+      extraCategories: ["ceiling"],
+      selections: {
+        flooring: lvp,
+        "walls/paint": paint1,
+        "trim/baseboards": cheapBase(),
+        ceiling: popcornAndCeilingPaint(),
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+    {
+      id: "ss-garage",
+      label: "Garage",
+      roomTypeId: "garage",
+      lengthFt: 20,
+      widthFt: 12,
+      heightFt: 8,
+      doors: [{ id: "ss-g-d", widthFt: 3, heightFt: 7 }],
+      windows: [{ id: "ss-g-w", widthFt: 3, heightFt: 3 }],
+      extraCategories: ["windows", "roofing", "cleanup"],
+      selections: {
+        doors: [
+          { name: "Garage door — single car, painted steel, 7x7", quantity: 1 },
+          { name: "Garage door opener — add if existing is dead", quantity: 1 },
+        ],
+        roofing: { name: "Roof patch — garage gable eave, missing shingles (not a reroof)", quantity: 1 },
+        insulation: { name: "Attic insulation — allowance until depth is measured", quantity: 1 },
+        windows: { name: "Vinyl replacement dual pane — CMU / block opening", quantity: 1 },
+        cleanup: { name: "Debris haul-off", quantity: 1 },
+        ceiling: { name: "5/8 in drywall — hung, taped, ready for texture", quantity: 192 },
+      },
+      cabinetFinishId: "gs",
+      cabinets: [],
+    },
+  ];
+  return {
+    rooms,
+    activeRoomId: rooms[0].id,
+    laborRate: OP_PERCENT,
+    client: { ...MENDEZ_CLIENT },
+  };
+}
+
 export function blankJob() {
   const room: JobRoom = {
     id: "room-1",

@@ -18,6 +18,7 @@ import {
   getRoom,
   lookupOption,
   sampleJob,
+  sampleShadySpringsJob,
   uniqueRoomLabel,
   type ClientInfo,
   type JobRoom,
@@ -67,6 +68,7 @@ type EstimatorState = JobSlice & {
   removeCabinet: (id: string) => void;
   setClient: (patch: Partial<ClientInfo>) => void;
   loadSample: () => void;
+  loadShadySprings: () => void;
   startOver: () => void;
   hydrate: () => void;
   refreshLog: () => void;
@@ -361,6 +363,10 @@ export const useEstimatorStore = create<EstimatorState>((set, get) => ({
   setClient: (patch) => set((state) => ({ client: { ...state.client, ...patch } })),
   loadSample: () => {
     const next = withOpDefaults(withNormalizedRooms(sampleJob()));
+    set({ ...next, currentSavedId: null, lastSavedAt: null });
+  },
+  loadShadySprings: () => {
+    const next = withOpDefaults(withNormalizedRooms(sampleShadySpringsJob()));
     set({ ...next, currentSavedId: null, lastSavedAt: null });
   },
   startOver: () => {
