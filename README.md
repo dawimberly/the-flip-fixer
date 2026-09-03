@@ -1,31 +1,14 @@
-# The Flip Fixer
+# The Flip Fixer (legacy estimator repo)
 
-Room-by-room remodel estimates for San Antonio and the Hill Country.
+**Canonical app:** [dawimberly/flpfxr](https://github.com/dawimberly/flpfxr) on https://www.theflipfixer.com
 
-**This repository is the house.** Phone Grok and desktop Grok both edit `dawimberly/the-flip-fixer` on `main`. If it is not committed here, the other device does not have it.
+Employee login: https://theflipfixer.com/login → estimator at https://www.theflipfixer.com/estimator
 
-Xactimate-style installed prices for finishes. Northville cabinetry by SKU, with $75 install per box ($125 for pantries and refrigerator panels). Contractor PDF and customer copy.
+This repository previously hosted the standalone estimator at `the-flip-fixer-estimator.vercel.app`. That URL should redirect to the marketing site estimator. Prefer editing **flpfxr** for estimator + marketing going forward so phone and desktop stay on one codebase.
 
-## Phone and computer
+Room-by-room remodel estimates for San Antonio and the Hill Country. Xactimate-style installed prices, Northville cabinetry, contractor + customer PDFs with **By trade** and **Cost per item**.
 
-1. Open this repo: [github.com/dawimberly/the-flip-fixer](https://github.com/dawimberly/the-flip-fixer)
-2. Edit on the phone. Commit to `main`.
-3. Sit down at the computer. Pull `main`. Edit. Commit.
-4. Do not keep a second copy of the estimator in another folder and hope it stays in sync.
-
-The Grok project folder (`Flip-Fixer-*.pdf`, Northville price book, Nextdoor calendar) lives next to this chat and on the linked Drive. Those are office files. The estimator source is this repo.
-
-## What does not travel
-
-Saved jobs in the app sit in **that browser on that device** (`localStorage`). A kitchen you priced on the phone is not waiting on the laptop unless you:
-
-- Download the contractor or customer PDF, or
-- Re-enter the job, or
-- We later add a signed-in cloud log
-
-The sample house in the app is in the code. That one is shared.
-
-## Run it
+## Run locally (archive)
 
 ```bash
 npm install
@@ -39,4 +22,3 @@ Open the local URL the script prints. `npm run typecheck` checks the TypeScript.
 - Cabinets: Northville MSRP, December 2023
 - Other line items: TXSA8X, September 2026
 - Overhead and profit defaults to 20%, and can be switched off
-- A category can hold more than one line (baseboard and the paint on it; a full roof stack)
